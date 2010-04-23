@@ -52,7 +52,7 @@
       // remove placeholders before submit (add it once per form for optimal performance)
       var form = el.closest("form");
       if (form && !form.data('placeholder.clearer_set')) {
-        el.closest("form").bind("submit", removePlaceholderValues);
+        el.closest("form").bind("submit", clearPlaceholders);
         form.data('placeholder.clearer_set', true)
       }
     });
@@ -72,8 +72,8 @@
       .removeClass(blurClass);
   };
   
-  function removePlaceholderValues() {
-    $("input[placeholder]").each(function() {
+  function clearPlaceholders() {
+    $("*[placeholder]").each(function() {
       var el = $(this);
       if (el.data('placeholder.activated')) el.val("");
     });
@@ -87,7 +87,7 @@
   // load em up!
   $(function() {
     if (autoload) $("*[placeholder]").placeholders();
-    $(window).unload(removePlaceholderValues); // handles Firefox's autocomplete
+    $(window).unload(clearPlaceholders); // handles Firefox's autocomplete
   });
   
 })(jQuery);
