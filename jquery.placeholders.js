@@ -7,12 +7,13 @@
  * Licensed under the MIT license.
  *
  * Requires: jQuery v1.3.2
- * Version: 0.1.2
+ * Version: 0.1.3
  */
 (function($) {  
   
   var debug = false;
   var placeholderColor = debug ? "red" : "#aaa";
+  var placeholderAttributeName = "placeholder"
   var blurClass = "blur";
   var autoload = true;
   
@@ -24,7 +25,7 @@
       el.data("placeholder.original_color", el.css("color"));
       
       // show if blank
-      var placeholder = el.attr("placeholder");
+      var placeholder = el.attr(placeholderAttributeName);
       var val = el.val() || "";
       if (val == "") el.activatePlaceholder().val(placeholder);
 
@@ -73,7 +74,7 @@
   };
   
   function clearPlaceholders() {
-    $("*[placeholder]").each(function() {
+    $("*[" + placeholderAttributeName + "]").each(function() {
       var el = $(this);
       if (el.data('placeholder.activated')) el.val("");
     });
@@ -86,7 +87,7 @@
   
   // load em up!
   $(function() {
-    if (autoload) $("*[placeholder]").placeholders();
+    if (autoload) $("*[" + placeholderAttributeName + "]").placeholders();
     $(window).unload(clearPlaceholders); // handles Firefox's autocomplete
   });
   
