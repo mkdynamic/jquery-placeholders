@@ -1,3 +1,5 @@
+//= require <jquery>
+
 /*!
  * Cross-browser Placeholder Plugin for jQuery
  *
@@ -5,14 +7,21 @@
  * Licensed under the MIT license.
  *
  * Requires: jQuery v1.3.2
- * Version: 0.1.0
+ * Version: 0.1.1
  */
 (function($) {  
-  var placeholderColor = "#aaa";
   
-  $.fn.placeholders = function() {      
+  var debug = false;
+  var placeholderColor = debug ? "red" : "#aaa";
+  var blurClass = "blur";
+  var autoload = true;
+  
+  $.fn.placeholders = function() {  
     return $(this).each(function() {      
       var el = $(this);
+      
+      // input placeholders are supported by natively on some browsers
+      if (!debug && el[0].tagName == "INPUT" && arePlaceholdersSupported()) return $(this);
       
       // save original color in cache
       el.data("placeholder.original_color", el.css("color"));
@@ -61,13 +70,15 @@
   $.fn.activatePlaceholder = function() { 
     var el = $(this);
     return el.data('placeholder.activated', true)
-      .css("color", placeholderColor);
+      .css("color", placeholderColor)
+      .addClass(blurClass);
   };
   
   $.fn.deactivatePlaceholder = function() { 
     var el = $(this);
     return el.data('placeholder.activated', false)
-      .css("color", el.data("placeholder.original_color"));
+      .css("color", el.data("placeholder.original_color"))
+      .removeClass(blurClass);
   };
   
   function arePlaceholdersSupported() {
@@ -75,9 +86,9 @@
     return 'placeholder' in i;
   };
   
+  // load em up!
   $(function() {
-    if (arePlaceholdersSupported()) return true;
-    $("*[placeholder]").placeholders();
+    if (autoload) $("*[placeholder]").placeholders();
   });
+  
 })(jQuery);
-
