@@ -50,10 +50,16 @@
         if (val == "") el.activatePlaceholder().val(placeholder);
       });
       
-      // remove placeholders before submit (add it once per form for optimal performance)
+      // remove form placeholders before submit -- only bind once per form
       var form = el.closest("form");
       if (form && !form.data('placeholder.clearer_set')) {
-        el.closest("form").bind("submit", clearPlaceholders);
+        el.closest("form").bind("submit", function() {
+          form.find("*[" + placeholderAttributeName + "]").each(function() {
+            var el = $(this);
+            if (el.data('placeholder.activated')) el.val("");
+          });
+          return true;
+        });
         form.data('placeholder.clearer_set', true)
       }
     });
@@ -73,7 +79,7 @@
       .removeClass(blurClass);
   };
   
-  function clearPlaceholders() {
+  function clearAllPlaceholders(parent) {
     $("*[" + placeholderAttributeName + "]").each(function() {
       var el = $(this);
       if (el.data('placeholder.activated')) el.val("");
@@ -88,7 +94,7 @@
   // load em up!
   $(function() {
     if (autoload) $("*[" + placeholderAttributeName + "]").placeholders();
-    $(window).unload(clearPlaceholders); // handles Firefox's autocomplete
+    $(window).unload(clearAllPlaceholders); // handles Firefox's autocomplete
   });
   
 })(jQuery);
