@@ -7,7 +7,7 @@
  * Licensed under the MIT license.
  *
  * Requires: jQuery v1.3.2
- * Version: 0.1.1
+ * Version: 0.1.2
  */
 (function($) {  
   
@@ -19,9 +19,6 @@
   $.fn.placeholders = function() {  
     return $(this).each(function() {      
       var el = $(this);
-      
-      // input placeholders are supported by natively on some browsers
-      if (!debug && el[0].tagName == "INPUT" && arePlaceholdersSupported()) return $(this);
       
       // save original color in cache
       el.data("placeholder.original_color", el.css("color"));
@@ -55,13 +52,7 @@
       // remove placeholders before submit (add it once per form for optimal performance)
       var form = el.closest("form");
       if (form && !form.data('placeholder.clearer_set')) {
-        el.closest("form").bind("submit", function() {
-          $("input[placeholder]").each(function() {
-            var el = $(this);
-            if (el.data('placeholder.activated')) el.deactivatePlaceholder().val("");
-          });
-          return true;
-        });
+        el.closest("form").bind("submit", removePlaceholderValues);
         form.data('placeholder.clearer_set', true)
       }
     });
@@ -81,6 +72,13 @@
       .removeClass(blurClass);
   };
   
+  function removePlaceholderValues() {
+    $("input[placeholder]").each(function() {
+      var el = $(this);
+      if (el.data('placeholder.activated')) el.val("");
+    });
+  };
+  
   function arePlaceholdersSupported() {
     var i = document.createElement('input');
     return 'placeholder' in i;
@@ -89,6 +87,7 @@
   // load em up!
   $(function() {
     if (autoload) $("*[placeholder]").placeholders();
+    $(window).unload(removePlaceholderValues); // handles Firefox's autocomplete
   });
   
 })(jQuery);
