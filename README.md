@@ -10,12 +10,7 @@ Add this to the HEAD of the document (after you include jQuery, of course):
 
     <script src="jquery.placeholders.js" type="text/javascript" charset="utf-8"></script>
 
-And add a class 'inline' to every label you wish to act inline:
-
-    <label for="msg" class="inline">Enter your msg...</label>
-    <textarea id="msg"></textarea>
-
-When fields are not focused, they will have a `blur` class added to them.
+Just add the placeholder to inputs and the plugin will autoload if needed, depending on browser support. If you need to manually activate the plugin on specific elements that you dynamically add to the DOM, just call `$('el').placeholders()`.
 
 See `demo.html` for an example.
 
